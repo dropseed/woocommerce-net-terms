@@ -1,0 +1,12 @@
+#!/bin/sh -e
+docker-compose down -v
+docker-compose up -d
+
+until docker exec -it woocommerce-net-terms_wordpress_1 wp --allow-root core install --url=http://localhost:8000 --title=Testing --admin_user=admin --admin_email=admin@example.com; do
+  >&2 echo "WordPress is unavailable - sleeping"
+  sleep 1
+done
+docker exec -it woocommerce-net-terms_wordpress_1 /var/www/html/wp-content/plugins/woocommerce-net-terms/tests/setup.sh
+
+pushd tests
+cypress open
