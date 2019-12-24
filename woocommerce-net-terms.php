@@ -40,7 +40,4 @@ function net_terms_woocommerce_init() {
         $gateways[] = 'Net_Terms_Gateway';
         return $gateways;
     }
-
-    // Add any gateway actions and filters
-    new Net_Terms_Gateway();
 }
