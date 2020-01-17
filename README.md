@@ -1,6 +1,6 @@
 # Net Terms Payment Method for WooCommerce
 
-A WordPres plugin that adds a "net terms" payment method to WooCommerce.
+A WordPress plugin that adds a "net terms" payment method to WooCommerce.
 It allows you to enable net terms on a per-customer basis and specify the terms for each customer.
 Orders get processed like normal,
 and you mark them as paid once you receive payment (i.e. a check in the mail).
