@@ -34,10 +34,13 @@ function net_terms_woocommerce_init() {
     require_once dirname( __FILE__ ) . "/includes/admin.php";
     require_once dirname( __FILE__ ) . "/includes/checkout.php";
 
+    // Create it ourselves, so that all hooks load
+    $gateway = new Net_Terms_Gateway();
+
     // Add to available gateway options
     add_filter( 'woocommerce_payment_gateways', 'net_terms_payment_gateways' );
     function net_terms_payment_gateways( $gateways ) {
-        $gateways[] = 'Net_Terms_Gateway';
+        $gateways[] = $gateway;
         return $gateways;
     }
 }
