@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+# if test -n "$(git status --porcelain)"
+# then
+#     echo 'git repo is dirty, clean up before tagging'
+#     exit 1
+# fi
+
+if test -z "$1"
+then
+    echo 'specify the release version (ex. 1.0.0)'
+    exit 1
+fi
+
+echo "Releasing $1"
+
+# update plugin version
+# commit
+# tag
+
+rm -f woocommerce-net-terms.zip
+zip -r woocommerce-net-terms.zip LICENSE *.php includes/*
+# hub release create
+
+# update data.json version, last_updated, download_link
+# commit
+# deploy-function?
+
+# ./scripts/deploy-function

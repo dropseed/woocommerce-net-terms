@@ -1,0 +1,4 @@
+#!/bin/sh -ex
+pushd function
+gcloud beta functions deploy updater --entry-point gcp_handler --memory 128MB --runtime python37 --trigger-http --project woocommerce-net-terms
+popd

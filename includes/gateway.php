@@ -19,6 +19,11 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 		$this->title        = $this->get_option( 'title' );
 		$this->description  = $this->get_option( 'description' );
 		$this->instructions = $this->get_option( 'instructions' );
+		$this->license_key = $this->get_option( 'license_key' );
+
+		if (!$this->license_key) {
+			add_action('admin_notices', array($this, 'license_key_missing_notice'));
+		}
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -56,6 +61,13 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 				'title'       => 'Instructions',
 				'type'        => 'textarea',
 				'description' => 'Instructions that will be added to the thank you page and emails. Use {days} to insert the terms for the specific user.',
+				'default'     => 'Please send payment within {days} days.',
+				'desc_tip'    => false,
+			),
+			'license_key' => array(
+				'title'       => 'License Key',
+				'type'        => 'text',
+				'description' => 'Enables automatic plugin updates and gives you access to plugin support.',
 				'default'     => '',
 				'desc_tip'    => false,
 			),
@@ -65,9 +77,9 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Output for the order received page.
 	 */
-	public function thankyou_page() {
+	public function thankyou_page($order_id) {
 		if ( $this->instructions ) {
-			echo wp_kses_post( wpautop( wptexturize( $this->instructions ) ) );
+			echo wp_kses_post( wpautop( wptexturize( str_replace("{days}", net_terms_for_order(wc_get_order($order_id)), $this->instructions ) ) ) );
 		}
 	}
 
@@ -81,7 +93,7 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 	 */
 	public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
 		if ( $this->instructions && ! $sent_to_admin && $this->id === $order->get_payment_method() && $order->has_status( 'processing' ) ) {
-			echo wp_kses_post( wpautop( wptexturize( $this->instructions ) ) . PHP_EOL );
+			echo wp_kses_post( wpautop( wptexturize( str_replace("{days}", net_terms_for_order($order), $this->instructions ) ) ) . PHP_EOL );
 		}
 	}
 
@@ -125,5 +137,9 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 			return $order->get_date_paid() != null;
 		}
 		return $is_paid;
+	}
+
+	public function license_key_missing_notice() {
+		echo '<div class="error"><p><strong>Enter your license key to use Net Terms for WooCommerce!</strong> You can do this in WooCommerce > Settings > Payments > Net terms.</p></div>';
 	}
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- * Plugin Name:       Net Terms Payment Method for WooCommerce
+ * Plugin Name:       Net Terms for WooCommerce
  * Plugin URI:        https://www.dropseed.io
  * Description:       A payment gateway for WooCommerce to allow and track order payment with Net terms.
  * Version:           0.1
@@ -16,6 +16,8 @@
 if (!defined( 'WPINC')) {
     die;
 }
+
+define('NET_TERMS_CURRENT_VERSION', '0.1');
 
 function net_terms_woocommerce_missing_notice() {
 	echo '<div class="error"><p><strong>' . sprintf( 'Net Terms for WooCommerce requires WooCommerce to be installed and active. You can download %s here.', '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
@@ -33,14 +35,12 @@ function net_terms_woocommerce_init() {
     require_once dirname( __FILE__ ) . "/includes/gateway.php";
     require_once dirname( __FILE__ ) . "/includes/admin.php";
     require_once dirname( __FILE__ ) . "/includes/checkout.php";
-
-    // Create it ourselves, so that all hooks load
-    $gateway = new Net_Terms_Gateway();
+    require_once dirname( __FILE__ ) . "/includes/update.php";
 
     // Add to available gateway options
     add_filter( 'woocommerce_payment_gateways', 'net_terms_payment_gateways' );
     function net_terms_payment_gateways( $gateways ) {
-        $gateways[] = $gateway;
+        $gateways[] = 'Net_Terms_Gateway';
         return $gateways;
     }
 }

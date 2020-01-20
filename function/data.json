@@ -1,0 +1,7 @@
+{
+    "name": "Net Terms for WooCommerce",
+    "slug": "woocommerce-net-terms",
+    "plugin": "woocommerce-net-terms/woocommerce-net-terms.php",
+    "version": "1.0.0",
+    "author": "<a href=\"https://www.dropseed.io/\">Dropseed</a>"
+}
