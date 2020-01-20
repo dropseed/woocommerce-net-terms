@@ -21,10 +21,6 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 		$this->instructions = $this->get_option( 'instructions' );
 		$this->license_key = $this->get_option( 'license_key' );
 
-		if (!$this->license_key) {
-			add_action('admin_notices', array($this, 'license_key_missing_notice'));
-		}
-
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
@@ -137,9 +133,5 @@ class Net_Terms_Gateway extends WC_Payment_Gateway {
 			return $order->get_date_paid() != null;
 		}
 		return $is_paid;
-	}
-
-	public function license_key_missing_notice() {
-		echo '<div class="error"><p><strong>Enter your license key to use Net Terms for WooCommerce!</strong> You can do this in WooCommerce > Settings > Payments > Net terms.</p></div>';
 	}
 }

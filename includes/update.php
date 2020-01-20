@@ -68,5 +68,5 @@ function net_terms_push_update( $transient ){
 }
 
 function net_terms_update_remote_failed() {
-	echo '<div class="error"><p><strong>Updating the Net Terms for WooCommerce plugin failed. Is your license key correct?</strong></p></div>';
+	echo '<div class="error"><p><strong>Updating the Net Terms for WooCommerce plugin failed.</strong> Have you entered a license key? You can change your license key in WooCommerce > Settings > Payments > Net terms.</p></div>';
 }
