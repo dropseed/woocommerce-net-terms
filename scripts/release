@@ -1,31 +1,55 @@
 #!/bin/sh -e
 
-# if test -n "$(git status --porcelain)"
-# then
-#     echo 'git repo is dirty, clean up before tagging'
-#     exit 1
-# fi
+if test -n "$(git status --porcelain)"
+then
+    echo 'git repo is dirty, clean up before tagging'
+    exit 1
+fi
 
-if test -z "$1"
+VERSION="$1"
+NOW="$(date -R)"
+DOWNLOAD_LINK="https://github.com/dropseed/woocommerce-net-terms/releases/download/v$VERSION/woocommerce-net-terms.zip"
+
+if test -z "$VERSION"
 then
     echo 'specify the release version (ex. 1.0.0)'
     exit 1
 fi
 
-echo "Releasing $1"
+echo "Releasing $VERSION"
 
-sd "\* Version:           \S+" "* Version:           $1" woocommerce-net-terms.php
-sd "NET_TERMS_CURRENT_VERSION', '(\S+)'" "NET_TERMS_CURRENT_VERSION\', \'$1\'" woocommerce-net-terms.php
-# update plugin version
-# commit
-# tag
+# Change the version in the plugin itself
+sd "\* Version:           \S+" "* Version:           $VERSION" woocommerce-net-terms.php
+sd "NET_TERMS_CURRENT_VERSION', '(\S+)'" "NET_TERMS_CURRENT_VERSION\', \'$VERSION\'" woocommerce-net-terms.php
 
+if test -z "$(git diff --stat | grep 'woocommerce-net-terms.php')"
+then
+    echo "Versions not updated correctly"
+    exit 1
+fi
+
+git add woocommerce-net-terms.php
+git commit -m "Update plugin version to $VERSION"
+git tag -a "v$VERSION" -m "v$VERSION"
+git push && git push --tags
+
+# Upload the plugin zip to GitHub releases
 rm -f woocommerce-net-terms.zip
 zip -r woocommerce-net-terms.zip LICENSE *.php includes/*
-# hub release create
+hub release create --browse -a woocommerce-net-terms.zip -m "$VERSION" "v$VERSION"
 
-# update data.json version, last_updated, download_link
-# commit
-# deploy-function?
+# Change the version the updater knows is the most recent
+sd "\"version\": \"\S+\"" "\"version\": \"$VERSION\"" function/data.json
+sd "\"last_updated\": \"\S+\"" "\"last_updated\": \"$NOW\"" function/data.json
+sd "\"download_link\": \"\S+\"" "\"download_link\": \"$DOWNLOAD_LINK\"" function/data.json
 
-# ./scripts/deploy-function
+if test -z "$(git diff --stat | grep 'function/data.json')"
+then
+    echo "Function not updated correctly"
+    exit 1
+fi
+
+git add function/data.json
+git commit -m "Update function latest version to $VERSION"
+git push
+./scripts/deploy-function
