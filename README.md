@@ -8,7 +8,7 @@ and you mark them as paid once you receive payment (i.e. a check in the mail).
 One of the differences between this and the built-in check payments option is that the order is not "on-hold" while you wait for payment. Instead,
 orders get processed and shipped as usual,
 and you mark the order as "paid" at a later date.
-Note that this plugin still expects that you get paid offline (likely via check) or through some other system.
+Note that this plugin expects that you get paid offline (likely via check) or through some other system.
 
 ## How it works
 
