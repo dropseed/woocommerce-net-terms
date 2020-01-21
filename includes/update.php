@@ -17,7 +17,7 @@ function net_terms_get_remote_info() {
 	);
 
 	if ( !is_wp_error( $remote ) && isset( $remote['response']['code'] ) && $remote['response']['code'] == 200 && !empty( $remote['body'] ) ) {
-		set_transient( 'net_terms_upgrade_info', $remote, 43200 ); // 12 hours cache
+		set_transient( 'net_terms_upgrade_info', $remote, 12*60*60 ); // 12 hours cache
 		return $remote;
 	}
 
@@ -31,18 +31,18 @@ function net_terms_after_update( $upgrader_object, $options ) {
 	}
 }
 
-add_filter('plugins_api', 'net_terms_plugin_info', 20, 3);
-function net_terms_plugin_info( $res, $action, $args ){
-	if( $action !== 'plugin_information' ) return false;
-	if( 'woocommerce-net-terms' !== $args->slug ) return $res;
+// add_filter('plugins_api', 'net_terms_plugin_info', 20, 3);
+// function net_terms_plugin_info( $res, $action, $args ){
+// 	if( $action !== 'plugin_information' ) return false;
+// 	if( 'woocommerce-net-terms' !== $args->slug ) return $res;
 
-	$remote = net_terms_get_remote_info();
+// 	$remote = net_terms_get_remote_info();
 
-	if( $remote ) return json_decode( $remote['body'], true );
+// 	if( $remote ) return json_decode( $remote['body'], true );
 
-	return false;
+// 	return false;
 
-}
+// }
 
 add_filter('site_transient_update_plugins', 'net_terms_push_update' );
 function net_terms_push_update( $transient ){

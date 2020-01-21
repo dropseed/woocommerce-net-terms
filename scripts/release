@@ -14,6 +14,8 @@ fi
 
 echo "Releasing $1"
 
+sd "\* Version:           \S+" "* Version:           $1" woocommerce-net-terms.php
+sd "NET_TERMS_CURRENT_VERSION', '(\S+)'" "NET_TERMS_CURRENT_VERSION\', \'$1\'" woocommerce-net-terms.php
 # update plugin version
 # commit
 # tag
