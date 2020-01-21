@@ -14,7 +14,7 @@ def gcp_handler(request):
     auth = request.headers.get("Authorization", "")
     try:
         license_key = auth.split()[1]
-    except KeyError:
+    except IndexError:
         flask.abort(401)
 
     data, status_code = handle(license_key)
