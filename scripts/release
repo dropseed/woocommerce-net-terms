@@ -35,7 +35,12 @@ git push && git push --tags
 
 # Upload the plugin zip to GitHub releases
 rm -f woocommerce-net-terms.zip
-zip -r woocommerce-net-terms.zip LICENSE *.php includes/*
+rm -rf woocommerce-net-terms && mkdir woocommerce-net-terms
+cp LICENSE woocommerce-net-terms/
+cp *.php woocommerce-net-terms/
+cp -r includes woocommerce-net-terms/
+zip -r woocommerce-net-terms.zip woocommerce-net-terms
+rm -rf woocommerce-net-terms
 hub release create --browse -a woocommerce-net-terms.zip -m "$VERSION" "v$VERSION"
 
 # Change the version the updater knows is the most recent
